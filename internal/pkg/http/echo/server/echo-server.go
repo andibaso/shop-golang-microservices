@@ -6,6 +6,8 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/meysamhadeli/shop-golang-microservices/internal/pkg/logger"
 	"time"
+	nrecho "github.com/newrelic/go-agent/v3/integrations/nrecho-v4"
+	"github.com/newrelic/go-agent/v3/newrelic"
 )
 
 const (
@@ -24,8 +26,10 @@ type EchoConfig struct {
 	Host                string   `mapstructure:"host"`
 }
 
-func NewEchoServer() *echo.Echo {
+func NewEchoServer(o11y *newrelic.Application) *echo.Echo {
+
 	e := echo.New()
+	e.Use(nrecho.Middleware(o11y))
 	return e
 }
 

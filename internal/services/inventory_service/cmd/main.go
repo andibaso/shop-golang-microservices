@@ -7,6 +7,7 @@ import (
 	echoserver "github.com/meysamhadeli/shop-golang-microservices/internal/pkg/http/echo/server"
 	httpclient "github.com/meysamhadeli/shop-golang-microservices/internal/pkg/http_client"
 	"github.com/meysamhadeli/shop-golang-microservices/internal/pkg/logger"
+	"github.com/meysamhadeli/shop-golang-microservices/internal/pkg/o11y"
 	"github.com/meysamhadeli/shop-golang-microservices/internal/pkg/otel"
 	"github.com/meysamhadeli/shop-golang-microservices/internal/pkg/rabbitmq"
 	"github.com/meysamhadeli/shop-golang-microservices/internal/services/inventory_service/config"
@@ -30,6 +31,7 @@ func main() {
 				config.InitConfig,
 				logger.InitLogger,
 				http.NewContext,
+				o11y.NewObservabilityProvider,
 				echoserver.NewEchoServer,
 				gormpgsql.NewGorm,
 				otel.TracerProvider,

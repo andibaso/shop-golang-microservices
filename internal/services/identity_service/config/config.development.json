@@ -45,5 +45,9 @@
     "password": "postgres",
     "dbName": "identity_service",
     "sslMode": false
+  },
+  "newRelic": {
+    "serviceName":"identity_service",
+    "licenseKey": "NR_KEY"
   }
 }

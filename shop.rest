@@ -1,6 +1,6 @@
 # https://github.com/Huachao/vscode-restclient
 @identity-api=http://localhost:5002
-@product-api=http://localhost:5000
+@product-api=http://localhost:5001
 
 ################################# Identity API #################################
 
@@ -51,7 +51,7 @@ authorization: Bearer {{Token.response.body.access_token}}
 
 ###
 # @name Update
-Put {{product-api}}/api/v1/products/09d7ef0b-b1ba-4c4c-a44b-9541fc8719bb
+Put {{product-api}}/api/v1/products/08efe24d-418c-4439-8287-7028c0191066
 accept: application/json
 Content-Type: application/json
 authorization: Bearer {{Token.response.body.access_token}}

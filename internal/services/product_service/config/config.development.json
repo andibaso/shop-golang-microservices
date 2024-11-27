@@ -13,7 +13,7 @@
     "kind" : "topic"
   },
   "echo": {
-    "port": ":5000",
+    "port": ":5001",
     "development": true,
     "timeout": 30,
     "basePath": "/api/v1",
@@ -45,5 +45,9 @@
     "password": "postgres",
     "dbName": "product_service",
     "sslMode": false
+  },
+  "newRelic": {
+    "serviceName":"product_service",
+    "licenseKey": "NR_KEY"
   }
 }

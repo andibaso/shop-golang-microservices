@@ -3,18 +3,20 @@ package config
 import (
 	"flag"
 	"fmt"
-	gormpgsql "github.com/meysamhadeli/shop-golang-microservices/internal/pkg/gorm_pgsql"
-	"github.com/meysamhadeli/shop-golang-microservices/internal/pkg/grpc"
-	echoserver "github.com/meysamhadeli/shop-golang-microservices/internal/pkg/http/echo/server"
-	"github.com/meysamhadeli/shop-golang-microservices/internal/pkg/logger"
-	"github.com/meysamhadeli/shop-golang-microservices/internal/pkg/otel"
-	"github.com/meysamhadeli/shop-golang-microservices/internal/pkg/rabbitmq"
-	"github.com/pkg/errors"
-	"github.com/spf13/viper"
 	"os"
 	"path/filepath"
 	"runtime"
 	"strings"
+
+	gormpgsql "github.com/meysamhadeli/shop-golang-microservices/internal/pkg/gorm_pgsql"
+	"github.com/meysamhadeli/shop-golang-microservices/internal/pkg/grpc"
+	echoserver "github.com/meysamhadeli/shop-golang-microservices/internal/pkg/http/echo/server"
+	"github.com/meysamhadeli/shop-golang-microservices/internal/pkg/logger"
+	"github.com/meysamhadeli/shop-golang-microservices/internal/pkg/o11y"
+	"github.com/meysamhadeli/shop-golang-microservices/internal/pkg/otel"
+	"github.com/meysamhadeli/shop-golang-microservices/internal/pkg/rabbitmq"
+	"github.com/pkg/errors"
+	"github.com/spf13/viper"
 )
 
 var configPath string
@@ -27,6 +29,7 @@ type Config struct {
 	Grpc         *grpc.GrpcConfig              `mapstructure:"grpc"`
 	GormPostgres *gormpgsql.GormPostgresConfig `mapstructure:"gormPostgres"`
 	Jaeger       *otel.JaegerConfig            `mapstructure:"jaeger"`
+	NewRelic     *o11y.NewRelicConfig          `mapstructure:"newRelic"`
 }
 
 func init() {
@@ -34,7 +37,7 @@ func init() {
 }
 
 func InitConfig() (*Config, *logger.LoggerConfig, *otel.JaegerConfig, *gormpgsql.GormPostgresConfig,
-	*grpc.GrpcConfig, *echoserver.EchoConfig, *rabbitmq.RabbitMQConfig, error) {
+	*grpc.GrpcConfig, *echoserver.EchoConfig, *rabbitmq.RabbitMQConfig, *o11y.NewRelicConfig, error) {
 
 	env := os.Getenv("APP_ENV")
 	if env == "" {
@@ -50,7 +53,7 @@ func InitConfig() (*Config, *logger.LoggerConfig, *otel.JaegerConfig, *gormpgsql
 			//https://stackoverflow.com/questions/18537257/how-to-get-the-directory-of-the-currently-running-file
 			d, err := dirname()
 			if err != nil {
-				return nil, nil, nil, nil, nil, nil, nil, err
+				return nil, nil, nil, nil, nil, nil, nil, nil, err
 			}
 
 			configPath = d
@@ -64,14 +67,14 @@ func InitConfig() (*Config, *logger.LoggerConfig, *otel.JaegerConfig, *gormpgsql
 	viper.SetConfigType("json")
 
 	if err := viper.ReadInConfig(); err != nil {
-		return nil, nil, nil, nil, nil, nil, nil, errors.Wrap(err, "viper.ReadInConfig")
+		return nil, nil, nil, nil, nil, nil, nil, nil, errors.Wrap(err, "viper.ReadInConfig")
 	}
 
 	if err := viper.Unmarshal(cfg); err != nil {
-		return nil, nil, nil, nil, nil, nil, nil, errors.Wrap(err, "viper.Unmarshal")
+		return nil, nil, nil, nil, nil, nil, nil, nil, errors.Wrap(err, "viper.Unmarshal")
 	}
 
-	return cfg, cfg.Logger, cfg.Jaeger, cfg.GormPostgres, cfg.Grpc, cfg.Echo, cfg.Rabbitmq, nil
+	return cfg, cfg.Logger, cfg.Jaeger, cfg.GormPostgres, cfg.Grpc, cfg.Echo, cfg.Rabbitmq, cfg.NewRelic, nil
 }
 
 func GetMicroserviceName(serviceName string) string {

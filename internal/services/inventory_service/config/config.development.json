@@ -40,5 +40,9 @@
     "password": "postgres",
     "dbName": "inventory_service",
     "sslMode": false
+  },
+  "newRelic": {
+    "serviceName":"inventory_service",
+    "licenseKey": "NR_KEY"
   }
 }
